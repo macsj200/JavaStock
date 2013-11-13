@@ -1,5 +1,7 @@
 package pricequery;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,19 +11,21 @@ import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class PriceQueryGui extends JFrame {
 	private JButton getInfo = null;
+	private JPanel megaPanel = null;
 	private JTextField symbolInput = null;
 	private JScrollPane scrollArea = null;
 	private JTextArea outputArea = null;
 	private final String[] formats = {"n", "p", "c1"};
 
 	PriceQueryGui(){
-		setLayout(new FlowLayout());
+		setLayout(new BorderLayout());
 
 		getInfo = new JButton("Go");
 		symbolInput = new JTextField(10);
@@ -33,9 +37,14 @@ public class PriceQueryGui extends JFrame {
 		
 		outputArea.setEditable(false);
 
-		getContentPane().add(getInfo);
-		getContentPane().add(symbolInput);
-		getContentPane().add(scrollArea);
+		megaPanel = new JPanel();
+		megaPanel.setLayout(new FlowLayout());
+		
+		megaPanel.add(getInfo);
+		megaPanel.add(symbolInput);
+		megaPanel.add(scrollArea);
+		
+		getContentPane().add(megaPanel);
 
 		pack();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,6 +62,8 @@ public class PriceQueryGui extends JFrame {
 		List<String[]> res;
 
 		long time = 0;
+		
+		Color randomColor = null;
 
 		symbols = input.split(" |,");
 
@@ -70,5 +81,8 @@ public class PriceQueryGui extends JFrame {
 		} catch (IOException e) {
 			System.out.println("Somethin's up with your internet!");
 		}
+		
+		randomColor = new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
+		megaPanel.setBackground(randomColor);
 	}
 }
