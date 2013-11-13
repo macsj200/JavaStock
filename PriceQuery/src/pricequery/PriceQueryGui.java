@@ -111,7 +111,6 @@ public class PriceQueryGui extends JFrame {
 		try {
 			time = System.currentTimeMillis();
 			res = (new PriceQueryer(symbols, formats).getCsvResults());
-			System.out.println(res.size());
 			time = System.currentTimeMillis() - time;
 			System.out.println("Query time: " + time);
 			for(int i = 0; i < res.size(); i++){
