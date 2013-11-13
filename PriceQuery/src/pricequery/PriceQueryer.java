@@ -59,10 +59,9 @@ public class PriceQueryer {
 			symbolsString = symbols[0];
 		}
 		else{
-			for(int i = 0; i < symbols.length - 1; i++){
+			for(int i = 0; i < symbols.length; i++){
 				symbolsString = symbolsString + symbols[i] + "+";
 			}
-			symbolsString = symbolsString + symbols[symbols.length - 1];
 		}
 
 		for(int i = 0; i < formats.length; i++){

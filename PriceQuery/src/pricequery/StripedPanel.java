@@ -9,7 +9,7 @@ import java.awt.geom.Ellipse2D.Double;
 import javax.swing.JPanel;
 
 public class StripedPanel extends JPanel{
-	private static final int nStripes = 5;
+	private static final int nStripes = 100;
 
 	public static final int X_AXIS = 0;
 	public static final int Y_AXIS = 1;
