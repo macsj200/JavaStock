@@ -21,20 +21,14 @@ public class PriceQueryer {
 	public PriceQueryer(String[] symbols, String[] formats) throws IOException{
 		this.symbols = symbols;
 		this.formats = formats;
+
 		URLReader = URLReaderFactory.newURLReader(makeQueryUrl());
 
 		csvResults = new ArrayList<String[]>();
 	}
 
 	public java.util.List<String[]> getCsvResults(){
-		(new Thread(new Runnable(){
-			public void run(){
-				readVals();
-			}
-		})).start();
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {}
+		readVals();
 		return csvResults;
 	}
 

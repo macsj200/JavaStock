@@ -109,7 +109,6 @@ public class PriceQueryGui extends JFrame {
 		long time = 0;
 
 		symbols = input.split(",");
-		
 
 		try {
 			time = System.currentTimeMillis();
