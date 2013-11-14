@@ -11,6 +11,7 @@ import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import javax.swing.Box;
@@ -154,8 +155,14 @@ public class PriceQueryGui extends JFrame {
 			stockMap = (new PriceQueryer(symbols, formats).getStockHash());
 			time = System.currentTimeMillis() - time;
 			System.out.println("Query time: " + time);
-			outputArea.append(res.get(i)[0] + String.format(" (%s)", formats[j]) + ": " + res.get(i)[j] + "\r\n");
-			outputArea.setCaretPosition(outputArea.getDocument().getLength());
+			for(Entry<String, HashMap<String, String>> entry : stockMap.entrySet()){
+				String key = entry.getKey();
+				HashMap<String, String> val = entry.getValue();
+				for(Entry<String, String> secentry : val.entrySet()){
+					outputArea.append(key + String.format(" (%s)", secentry.getKey()) + ": " + secentry.getValue() + "\r\n");
+					outputArea.setCaretPosition(outputArea.getDocument().getLength());
+				}
+			}
 		}
 		catch (IOException e) {
 			System.out.println("The internet is derping");
