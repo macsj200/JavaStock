@@ -54,7 +54,7 @@ public class PriceQueryGui extends JFrame {
 				}
 			}
 		} catch (IOException e) {
-			System.out.println("Somethin's up with your internet!");
+			System.out.println("The internet is derping");
 		}
 		
 		
@@ -85,6 +85,8 @@ public class PriceQueryGui extends JFrame {
 
 		megaBox.add(inputBox);
 		megaBox.add(scrollArea);
+		
+		megaBox.setPreferredSize(new Dimension(300,400));
 
 		backgroundPanel.add(megaBox);
 
@@ -129,12 +131,19 @@ public class PriceQueryGui extends JFrame {
 			}
 		}
 	}
+	
+	public String sanitize(String s){
+		return s.replaceAll(" ", "");
+	}
+	
 	public void parseInput(String input){
 		String[] symbols = null;
 		List<String[]> res;
 
 		long time = 0;
 
+		input = sanitize(input);
+		
 		symbols = input.split(",");
 
 		try {
@@ -149,7 +158,7 @@ public class PriceQueryGui extends JFrame {
 				}
 			}
 		} catch (IOException e) {
-			System.out.println("Somethin's up with your internet!");
+			System.out.println("The internet is derping");
 		}
 	}
 }
