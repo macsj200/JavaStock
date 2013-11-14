@@ -33,7 +33,7 @@ public class PriceQueryGui extends JFrame {
 	private StockPanel[] savedStocksPanels = null;
 	private TextOutputArea textOutput = null;
 	private final String[] formats = {"n", "p", "c1"};
-	private final String[] miniFormats = {"n","p"};
+	private final String[] miniFormats = {"p"};
 	private final String[] savedStocksSymbols = {"aapl", "goog"};
 
 	private List<String[]> res;
@@ -48,7 +48,16 @@ public class PriceQueryGui extends JFrame {
 
 
 		for(int i = 0; i < savedStocksSymbols.length; i++){
-			savedStocksPanels[i] = new StockPanel();
+			savedStocksPanels[i] = new StockPanel(savedStocksSymbols[i]);
+			
+			try {
+				writeResults((new PriceQueryer(savedStocksPanels[i].getSingletonSymbol(), 
+						miniFormats).getStockHash()), savedStocksPanels[i]);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			savedStocksBox.add(savedStocksPanels[i]);
 		}
 

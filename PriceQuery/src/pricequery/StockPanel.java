@@ -8,8 +8,10 @@ import javax.swing.JPanel;
 
 public class StockPanel extends JPanel implements GuiWritable{
 	private String writeString = "";
+	private String symbol = "";
 	
-	public StockPanel(){
+	public StockPanel(String symbol){
+		this.symbol = symbol;
 		setPreferredSize(new Dimension(10, getFontMetrics(getFont()).getHeight()));
 	}
 	
@@ -24,5 +26,10 @@ public class StockPanel extends JPanel implements GuiWritable{
 	public void write(String s) {
 		writeString = s;
 		repaint();
+	}
+	
+	public String[] getSingletonSymbol(){
+		String[] singleton = {symbol};
+		return singleton;
 	}
 }
