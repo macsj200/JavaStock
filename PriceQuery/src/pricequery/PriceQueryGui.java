@@ -82,6 +82,7 @@ public class PriceQueryGui extends JFrame {
 				return;
 			}
 			parseInput(symbolInput.getText());
+			symbolInput.requestFocus();
 		}
 	}
 
