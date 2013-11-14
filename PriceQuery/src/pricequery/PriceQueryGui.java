@@ -45,7 +45,7 @@ public class PriceQueryGui extends JFrame {
 
 		savedStocksPanels = new StockPanel[savedStocksSymbols.length];
 
-		
+
 
 		for(int i = 0; i < savedStocksSymbols.length; i++){
 			savedStocksPanels[i] = new StockPanel();
@@ -129,31 +129,26 @@ public class PriceQueryGui extends JFrame {
 
 	public void parseInput(String input){
 		String[] symbols = null;
-		List<String[]> res;
-
-		long time = 0;
 
 		input = sanitize(input);
 
 		symbols = input.split(",");
-
-		HashMap<String, HashMap<String, String>> stockMap;
-
+		
 		try {
-			time = System.currentTimeMillis();
-			stockMap = (new PriceQueryer(symbols, formats).getStockHash());
-			time = System.currentTimeMillis() - time;
-			System.out.println("Query time: " + time);
-			for(Entry<String, HashMap<String, String>> entry : stockMap.entrySet()){
-				String key = entry.getKey();
-				HashMap<String, String> val = entry.getValue();
-				for(Entry<String, String> secentry : val.entrySet()){
-					textOutput.write(key + String.format(" (%s)", secentry.getKey()) + ": " + secentry.getValue() + "\r\n");
-				}
-			}
+			writeResults((new PriceQueryer(symbols, formats).getStockHash()), textOutput);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		catch (IOException e) {
-			System.out.println("The internet is derping");
+	}
+
+	public void writeResults(HashMap<String, HashMap<String,String>> stocksMap, GuiWritable writer) throws IOException{
+		for(Entry<String, HashMap<String, String>> entry : stocksMap.entrySet()){
+			String key = entry.getKey();
+			HashMap<String, String> val = entry.getValue();
+			for(Entry<String, String> secentry : val.entrySet()){
+				writer.write(key + String.format(" (%s)", secentry.getKey()) + ": " + secentry.getValue() + "\r\n");
+			}
 		}
 	}
 }
