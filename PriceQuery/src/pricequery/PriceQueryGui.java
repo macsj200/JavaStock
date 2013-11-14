@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -33,18 +34,18 @@ public class PriceQueryGui extends JFrame {
 	private StockPanel[] savedStocksPanels = null;
 	private final String[] formats = {"n", "p", "c1"};
 	private final String[] savedStocksSymbols = {"aapl", "goog"};
-	
+
 	private List<String[]> res;
 
 	PriceQueryGui(){
 		setLayout(new BorderLayout());
-		
+
 		savedStocksBox = new Box(BoxLayout.X_AXIS);
-		
+
 		savedStocksPanels = new StockPanel[savedStocksSymbols.length];
-		
+
 		String[] miniFormats = {"n","p"};
-		
+
 		try {
 			res = (new PriceQueryer(savedStocksSymbols, miniFormats).getCsvResults());
 			for(int i = 0; i < res.size(); i++){
@@ -56,8 +57,8 @@ public class PriceQueryGui extends JFrame {
 		} catch (IOException e) {
 			System.out.println("The internet is derping");
 		}
-		
-		
+
+
 
 		getInfo = new JButton("Go");
 
@@ -80,12 +81,12 @@ public class PriceQueryGui extends JFrame {
 
 		inputBox.add(getInfo);
 		inputBox.add(symbolInput);
-		
+
 		megaBox.add(savedStocksBox);
 
 		megaBox.add(inputBox);
 		megaBox.add(scrollArea);
-		
+
 		megaBox.setPreferredSize(new Dimension(300,400));
 
 		backgroundPanel.add(megaBox);
@@ -99,7 +100,7 @@ public class PriceQueryGui extends JFrame {
 		pack();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-		
+
 		symbolInput.requestFocus();
 	}
 
@@ -131,11 +132,11 @@ public class PriceQueryGui extends JFrame {
 			}
 		}
 	}
-	
+
 	public String sanitize(String s){
 		return s.replaceAll(" ", "");
 	}
-	
+
 	public void parseInput(String input){
 		String[] symbols = null;
 		List<String[]> res;
@@ -143,21 +144,20 @@ public class PriceQueryGui extends JFrame {
 		long time = 0;
 
 		input = sanitize(input);
-		
+
 		symbols = input.split(",");
+
+		HashMap<String, HashMap<String, String>> stockMap;
 
 		try {
 			time = System.currentTimeMillis();
-			res = (new PriceQueryer(symbols, formats).getCsvResults());
+			stockMap = (new PriceQueryer(symbols, formats).getStockHash());
 			time = System.currentTimeMillis() - time;
 			System.out.println("Query time: " + time);
-			for(int i = 0; i < res.size(); i++){
-				for(int j = 1; j < res.get(i).length; j++){
-					outputArea.append(res.get(i)[0] + String.format(" (%s)", formats[j]) + ": " + res.get(i)[j] + "\r\n");
-					outputArea.setCaretPosition(outputArea.getDocument().getLength());
-				}
-			}
-		} catch (IOException e) {
+			outputArea.append(res.get(i)[0] + String.format(" (%s)", formats[j]) + ": " + res.get(i)[j] + "\r\n");
+			outputArea.setCaretPosition(outputArea.getDocument().getLength());
+		}
+		catch (IOException e) {
 			System.out.println("The internet is derping");
 		}
 	}

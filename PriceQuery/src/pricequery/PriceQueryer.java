@@ -4,6 +4,7 @@ import java.awt.List;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.googlecode.jcsv.CSVStrategy;
 import com.googlecode.jcsv.reader.CSVEntryParser;
@@ -17,10 +18,14 @@ public class PriceQueryer {
 	private String[] symbols = {};
 	private final String baseURL = "http://download.finance.yahoo.com/d/quotes.csv?%s";
 	private java.util.List<String[]> csvResults = null;
+	
+	private HashMap<String, HashMap<String, String>> stockHash = null;
 
 	public PriceQueryer(String[] symbols, String[] formats) throws IOException{
 		this.symbols = symbols;
 		this.formats = formats;
+		
+		stockHash = new HashMap<String, HashMap<String, String>>();
 
 		URLReader = URLReaderFactory.newURLReader(makeQueryUrl());
 
@@ -31,6 +36,11 @@ public class PriceQueryer {
 		readVals();
 		return csvResults;
 	}
+	
+	public HashMap<String, HashMap<String, String>> getStockHash(){
+		readVals();
+		return stockHash;
+	}
 
 	public void readVals(){
 		String line;
@@ -39,6 +49,13 @@ public class PriceQueryer {
 					.strategy(CSVStrategy.UK_DEFAULT).entryParser(new DefaultCSVEntryParser());
 			CSVReader<String[]> csvParser = CSVreaderbuilder.build();
 			csvResults = csvParser.readAll();
+			
+			for(int i = 0; i < csvResults.size(); i++){
+				stockHash.put(symbols[i], new HashMap<String, String>());
+				for(int j = 0; j < formats.length; j++){
+					stockHash.get(symbols[i]).put(formats[j], csvResults.get(i)[j]);
+				}
+			}
 		} catch (IOException e) {
 			System.out.println("Sorry couldn't do it");
 		}
