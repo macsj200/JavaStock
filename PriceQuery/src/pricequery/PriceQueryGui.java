@@ -70,6 +70,8 @@ public class PriceQueryGui extends JFrame {
 		pack();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+		
+		symbolInput.requestFocus();
 	}
 
 	class InputListener implements ActionListener{
