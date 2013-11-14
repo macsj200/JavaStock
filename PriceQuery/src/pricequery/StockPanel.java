@@ -14,13 +14,18 @@ public class StockPanel extends JPanel{
 		this.symbol = symbol;
 		this.price = price;
 		
-		setMinimumSize(new Dimension(10, 100));
+		setPreferredSize(new Dimension(10, getFontMetrics(getFont()).getHeight()));
 	}
 	
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		
-		g2d.drawString(symbol, 0, getFontMetrics(getFont()).getHeight() / 2);
+		g2d.drawString(symbol + ": " + price, 0, getFontMetrics(getFont()).getHeight() / 2 + 2);
+	}
+	
+	public void updatePrice(String price){
+		this.price = price;
+		repaint();
 	}
 }

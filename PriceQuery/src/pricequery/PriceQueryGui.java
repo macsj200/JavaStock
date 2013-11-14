@@ -33,6 +33,8 @@ public class PriceQueryGui extends JFrame {
 	private StockPanel[] savedStocksPanels = null;
 	private final String[] formats = {"n", "p", "c1"};
 	private final String[] savedStocksSymbols = {"aapl", "goog"};
+	
+	private List<String[]> res;
 
 	PriceQueryGui(){
 		setLayout(new BorderLayout());
@@ -41,10 +43,21 @@ public class PriceQueryGui extends JFrame {
 		
 		savedStocksPanels = new StockPanel[savedStocksSymbols.length];
 		
-		for(int i = 0; i < savedStocksPanels.length; i++){
-			savedStocksPanels[i] = new StockPanel(savedStocksSymbols[i], "0.00");
-			savedStocksBox.add(savedStocksPanels[i]);
+		String[] miniFormats = {"n","p"};
+		
+		try {
+			res = (new PriceQueryer(savedStocksSymbols, miniFormats).getCsvResults());
+			for(int i = 0; i < res.size(); i++){
+				for(int j = 1; j < res.get(i).length; j++){
+					savedStocksPanels[i] = new StockPanel(res.get(i)[0], res.get(i)[j]);
+					savedStocksBox.add(savedStocksPanels[i]);
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("Somethin's up with your internet!");
 		}
+		
+		
 
 		getInfo = new JButton("Go");
 
@@ -77,7 +90,7 @@ public class PriceQueryGui extends JFrame {
 
 		getContentPane().add(backgroundPanel);
 
-		setMinimumSize(new Dimension(275,400));
+		setMinimumSize(new Dimension(300,400));
 
 		//setResizable(false);
 
