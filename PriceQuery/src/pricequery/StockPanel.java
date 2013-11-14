@@ -6,14 +6,10 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-public class StockPanel extends JPanel{
-	private String symbol = null;
-	private String price = null;
+public class StockPanel extends JPanel implements GuiWritable{
+	private String writeString = "";
 	
-	public StockPanel(String symbol, String price){
-		this.symbol = symbol;
-		this.price = price;
-		
+	public StockPanel(){
 		setPreferredSize(new Dimension(10, getFontMetrics(getFont()).getHeight()));
 	}
 	
@@ -21,11 +17,12 @@ public class StockPanel extends JPanel{
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
 		
-		g2d.drawString(symbol + ": " + price, 0, getFontMetrics(getFont()).getHeight() / 2 + 2);
+		g2d.drawString(writeString, 0, getFontMetrics(getFont()).getHeight() / 2 + 2);
 	}
-	
-	public void updatePrice(String price){
-		this.price = price;
+
+	@Override
+	public void write(String s) {
+		writeString = s;
 		repaint();
 	}
 }

@@ -28,12 +28,12 @@ public class PriceQueryGui extends JFrame {
 	private Box megaBox = null;
 	private StripedPanel backgroundPanel = null;
 	private JTextField symbolInput = null;
-	private JScrollPane scrollArea = null;
 	private Box inputBox = null;
-	private JTextArea outputArea = null;
 	private Box savedStocksBox = null;
 	private StockPanel[] savedStocksPanels = null;
+	private TextOutputArea textOutput = null;
 	private final String[] formats = {"n", "p", "c1"};
+	private final String[] miniFormats = {"n","p"};
 	private final String[] savedStocksSymbols = {"aapl", "goog"};
 
 	private List<String[]> res;
@@ -45,20 +45,12 @@ public class PriceQueryGui extends JFrame {
 
 		savedStocksPanels = new StockPanel[savedStocksSymbols.length];
 
-		String[] miniFormats = {"n","p"};
+		
 
-		try {
-			res = (new PriceQueryer(savedStocksSymbols, miniFormats).getCsvResults());
-			for(int i = 0; i < res.size(); i++){
-				for(int j = 1; j < res.get(i).length; j++){
-					savedStocksPanels[i] = new StockPanel(res.get(i)[0], res.get(i)[j]);
-					savedStocksBox.add(savedStocksPanels[i]);
-				}
-			}
-		} catch (IOException e) {
-			System.out.println("The internet is derping");
+		for(int i = 0; i < savedStocksSymbols.length; i++){
+			savedStocksPanels[i] = new StockPanel();
+			savedStocksBox.add(savedStocksPanels[i]);
 		}
-
 
 
 		getInfo = new JButton("Go");
@@ -67,14 +59,11 @@ public class PriceQueryGui extends JFrame {
 		symbolInput.addFocusListener(new TextFieldFocusListener());
 		symbolInput.setForeground(Color.gray);
 
-		outputArea = new JTextArea(20,20);
-		scrollArea = new JScrollPane(outputArea);
+		textOutput = new TextOutputArea(20,20);
 		inputBox = new Box(BoxLayout.X_AXIS);
 
 		getInfo.addActionListener(new InputListener());
 		symbolInput.addActionListener(new InputListener());
-
-		outputArea.setEditable(false);
 
 		backgroundPanel = new StripedPanel(StripedPanel.X_AXIS);
 
@@ -86,7 +75,7 @@ public class PriceQueryGui extends JFrame {
 		megaBox.add(savedStocksBox);
 
 		megaBox.add(inputBox);
-		megaBox.add(scrollArea);
+		megaBox.add(textOutput);
 
 		megaBox.setPreferredSize(new Dimension(300,400));
 
@@ -159,8 +148,7 @@ public class PriceQueryGui extends JFrame {
 				String key = entry.getKey();
 				HashMap<String, String> val = entry.getValue();
 				for(Entry<String, String> secentry : val.entrySet()){
-					outputArea.append(key + String.format(" (%s)", secentry.getKey()) + ": " + secentry.getValue() + "\r\n");
-					outputArea.setCaretPosition(outputArea.getDocument().getLength());
+					textOutput.write(key + String.format(" (%s)", secentry.getKey()) + ": " + secentry.getValue() + "\r\n");
 				}
 			}
 		}
