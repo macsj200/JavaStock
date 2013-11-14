@@ -29,10 +29,22 @@ public class PriceQueryGui extends JFrame {
 	private JScrollPane scrollArea = null;
 	private Box inputBox = null;
 	private JTextArea outputArea = null;
+	private Box savedStocksBox = null;
+	private StockPanel[] savedStocksPanels = null;
 	private final String[] formats = {"n", "p", "c1"};
+	private final String[] savedStocksSymbols = {"aapl", "goog"};
 
 	PriceQueryGui(){
 		setLayout(new BorderLayout());
+		
+		savedStocksBox = new Box(BoxLayout.X_AXIS);
+		
+		savedStocksPanels = new StockPanel[savedStocksSymbols.length];
+		
+		for(int i = 0; i < savedStocksPanels.length; i++){
+			savedStocksPanels[i] = new StockPanel(savedStocksSymbols[i], "0.00");
+			savedStocksBox.add(savedStocksPanels[i]);
+		}
 
 		getInfo = new JButton("Go");
 
@@ -55,6 +67,8 @@ public class PriceQueryGui extends JFrame {
 
 		inputBox.add(getInfo);
 		inputBox.add(symbolInput);
+		
+		megaBox.add(savedStocksBox);
 
 		megaBox.add(inputBox);
 		megaBox.add(scrollArea);
