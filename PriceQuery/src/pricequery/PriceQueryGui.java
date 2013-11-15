@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import com.googlecode.jcsv.CSVStrategy;
+import com.googlecode.jcsv.reader.CSVReader;
+import com.googlecode.jcsv.reader.internal.CSVReaderBuilder;
+import com.googlecode.jcsv.reader.internal.DefaultCSVEntryParser;
+
 public class PriceQueryGui extends JFrame {
 	private JButton getInfo = null;
 	private Box megaBox = null;
@@ -34,13 +41,31 @@ public class PriceQueryGui extends JFrame {
 	private TextOutputArea textOutput = null;
 	private final String[] formats = {"n", "p", "c1"};
 	private final String[] miniFormats = {"p"};
-	private final String[] savedStocksSymbols = {"aapl", "goog"};
+	private String[] savedStocksSymbols = {"aapl", "goog"};
 
 	private List<String[]> res;
 
 	PriceQueryGui(){
 		setLayout(new BorderLayout());
-
+		CSVReaderBuilder<String[]> CSVreaderbuilder = null;
+		List<String[]> temp = null;
+		try {
+			CSVreaderbuilder = (new CSVReaderBuilder<String[]>(new FileReader("/Users/aproffit15/Desktop/config.csv"))
+					.strategy(CSVStrategy.UK_DEFAULT).entryParser(new DefaultCSVEntryParser()));
+		} catch (FileNotFoundException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		CSVReader<String[]> csvParser = CSVreaderbuilder.build();
+		try {
+			temp = csvParser.readAll();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		savedStocksSymbols = temp.get(0);
+		System.out.println(temp.get(0)[1]);
+		
 		savedStocksBox = new Box(BoxLayout.X_AXIS);
 
 		savedStocksPanels = new StockPanel[savedStocksSymbols.length];
