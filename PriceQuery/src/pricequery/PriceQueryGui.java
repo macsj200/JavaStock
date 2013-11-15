@@ -45,20 +45,21 @@ public class PriceQueryGui extends JFrame {
 	private final String[] formats = {"n", "p", "c1"};
 	private final String[] miniFormats = {"p"};
 	private String[] savedStocksSymbols = {"aapl", "goog"};
+	private File configFile = null;
+	private FileReader configFileReader = null;
+	private FileWriter configFileWriter = null;
+	private BufferedWriter configFileBufferedWriter = null;
+	private CSVReader<String[]> csvParser = null;
+	private CSVReaderBuilder<String[]> CSVreaderbuilder = null;
+	private List<String[]> temp = null;
 
 	private List<String[]> res;
 	private String userConfigFilePath = null;
 
 	PriceQueryGui(){
 		setLayout(new BorderLayout());
-		CSVReaderBuilder<String[]> CSVreaderbuilder = null;
-		List<String[]> temp = null;
 		userConfigFilePath = System.getProperty("user.home").concat("/Desktop/config.csv");
-		File configFile = null;
-		FileReader configFileReader = null;
-		FileWriter configFileWriter = null;
-		BufferedWriter configFileBufferedWriter = null;
-		CSVReader<String[]> csvParser = null;
+		
 
 		configFile = new File(userConfigFilePath);
 
