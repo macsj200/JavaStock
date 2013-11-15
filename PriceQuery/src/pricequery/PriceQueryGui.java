@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -53,24 +54,30 @@ public class PriceQueryGui extends JFrame {
 		CSVReaderBuilder<String[]> CSVreaderbuilder = null;
 		List<String[]> temp = null;
 		userConfigFilePath = System.getProperty("user.home").concat("/Desktop/config.csv");
+		File configFile = null;
+		FileReader configFileReader = null;
+		FileWriter configFileWriter = null;
+		BufferedWriter configFileBufferedWriter = null;
+		CSVReader<String[]> csvParser = null;
+
+		configFile = new File(userConfigFilePath);
+
 		try {
-			CSVreaderbuilder = (new CSVReaderBuilder<String[]>(new FileReader(userConfigFilePath))
+			configFileReader = new FileReader(configFile);
+			CSVreaderbuilder = (new CSVReaderBuilder<String[]>(configFileReader)
 					.strategy(CSVStrategy.UK_DEFAULT).entryParser(new DefaultCSVEntryParser()));
 		} catch (FileNotFoundException e2) {
-			// TODO Auto-generated catch block
-
 			try {
-
-				BufferedWriter writer = new BufferedWriter(new FileWriter(userConfigFilePath));
+				configFileBufferedWriter = new BufferedWriter(new FileWriter(userConfigFilePath));
 				for (int x = 0; x < savedStocksSymbols.length; x++) {
 					if (x == savedStocksSymbols.length-1){
-						writer.write(savedStocksSymbols[x]);
+						configFileBufferedWriter.write(savedStocksSymbols[x]);
 					} else {
-						writer.write(savedStocksSymbols[x].concat(","));
+						configFileBufferedWriter.write(savedStocksSymbols[x].concat(","));
 
 					}
 				}
-				writer.flush();
+				configFileBufferedWriter.flush();
 				CSVreaderbuilder = (new CSVReaderBuilder<String[]>(new FileReader(userConfigFilePath))
 						.strategy(CSVStrategy.UK_DEFAULT).entryParser(new DefaultCSVEntryParser()));
 			} catch (IOException e) {
@@ -78,15 +85,49 @@ public class PriceQueryGui extends JFrame {
 				e.printStackTrace();
 			}
 		}
-		CSVReader<String[]> csvParser = CSVreaderbuilder.build();
+
+		csvParser = CSVreaderbuilder.build();
+
+
 		try {
 			temp = csvParser.readAll();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}finally{
+			if(configFileReader != null){
+				try {
+					configFileReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 
+			if(configFileWriter != null){
+				try {
+					configFileWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if(configFileBufferedWriter != null){
+				try {
+					configFileBufferedWriter.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if(csvParser != null){
+				try {
+					csvParser.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+
 		savedStocksSymbols = temp.get(0);
-		System.out.println(temp.get(0)[1]);
 
 		savedStocksBox = new Box(BoxLayout.X_AXIS);
 
