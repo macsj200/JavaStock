@@ -15,6 +15,7 @@ public class StockPanel extends JPanel implements GuiWritable{
 		setPreferredSize(new Dimension(10, getFontMetrics(getFont()).getHeight()));
 	}
 	
+	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;

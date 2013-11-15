@@ -186,6 +186,7 @@ public class PriceQueryGui extends JFrame {
 	}
 
 	class InputListener implements ActionListener{
+		@Override
 		public void actionPerformed(ActionEvent ae){
 			backgroundPanel.genBackground();
 			backgroundPanel.repaint();
