@@ -3,7 +3,6 @@ package pricequery;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -17,15 +16,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Scanner;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.googlecode.jcsv.CSVStrategy;
@@ -52,8 +47,6 @@ public class PriceQueryGui extends JFrame {
 	private CSVReader<String[]> csvParser = null;
 	private CSVReaderBuilder<String[]> CSVreaderbuilder = null;
 	private List<String[]> temp = null;
-
-	private List<String[]> res;
 	private String userConfigFilePath = null;
 
 	PriceQueryGui(){
