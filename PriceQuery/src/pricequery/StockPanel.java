@@ -6,21 +6,23 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-public class StockPanel extends JPanel implements GuiWritable{
+public class StockPanel extends JPanel implements GuiWritable {
 	private String writeString = "";
 	private String symbol = "";
-	
-	public StockPanel(String symbol){
+
+	public StockPanel(String symbol) {
 		this.symbol = symbol;
-		setPreferredSize(new Dimension(10, getFontMetrics(getFont()).getHeight()));
+		setPreferredSize(new Dimension(10, getFontMetrics(getFont())
+				.getHeight()));
 	}
-	
+
 	@Override
-	public void paintComponent(Graphics g){
+	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		Graphics2D g2d = (Graphics2D) g;
-		
-		g2d.drawString(writeString, 0, getFontMetrics(getFont()).getHeight() / 2 + 2);
+		final Graphics2D g2d = (Graphics2D) g;
+
+		g2d.drawString(writeString, 0,
+				getFontMetrics(getFont()).getHeight() / 2 + 2);
 	}
 
 	@Override
@@ -28,9 +30,9 @@ public class StockPanel extends JPanel implements GuiWritable{
 		writeString = s;
 		repaint();
 	}
-	
-	public String[] getSingletonSymbol(){
-		String[] singleton = {symbol};
+
+	public String[] getSingletonSymbol() {
+		final String[] singleton = { symbol };
 		return singleton;
 	}
 }
