@@ -3,6 +3,7 @@ package pricequery;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -21,6 +22,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.googlecode.jcsv.CSVStrategy;
@@ -31,6 +33,7 @@ import com.googlecode.jcsv.reader.internal.DefaultCSVEntryParser;
 public class PriceQueryGui extends JFrame {
 	private JButton getInfo = null;
 	private Box megaBox = null;
+	private JScrollPane stocksScrollPane = null;
 	private StripedPanel backgroundPanel = null;
 	private JTextField symbolInput = null;
 	private Box inputBox = null;
@@ -127,7 +130,7 @@ public class PriceQueryGui extends JFrame {
 
 		savedStocksSymbols = temp.get(0);
 
-		savedStocksBox = new Box(BoxLayout.X_AXIS);
+		savedStocksBox = new Box(BoxLayout.Y_AXIS);
 
 		savedStocksPanels = new StockPanel[savedStocksSymbols.length];
 
@@ -147,6 +150,8 @@ public class PriceQueryGui extends JFrame {
 
 			savedStocksBox.add(savedStocksPanels[i]);
 		}
+		
+		stocksScrollPane = new JScrollPane(savedStocksBox);
 
 		getInfo = new JButton("Go");
 
@@ -166,8 +171,10 @@ public class PriceQueryGui extends JFrame {
 
 		inputBox.add(getInfo);
 		inputBox.add(symbolInput);
+		
+		stocksScrollPane.setPreferredSize(new Dimension(20,60));
 
-		megaBox.add(savedStocksBox);
+		megaBox.add(stocksScrollPane);
 
 		megaBox.add(inputBox);
 		megaBox.add(textOutput);
