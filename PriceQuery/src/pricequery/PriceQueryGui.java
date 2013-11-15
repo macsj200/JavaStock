@@ -8,8 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -44,28 +46,48 @@ public class PriceQueryGui extends JFrame {
 	private String[] savedStocksSymbols = {"aapl", "goog"};
 
 	private List<String[]> res;
+	private String userConfigFilePath = null;
 
 	PriceQueryGui(){
 		setLayout(new BorderLayout());
 		CSVReaderBuilder<String[]> CSVreaderbuilder = null;
 		List<String[]> temp = null;
+		userConfigFilePath = System.getProperty("user.home").concat("/Desktop/config.csv");
 		try {
-			CSVreaderbuilder = (new CSVReaderBuilder<String[]>(new FileReader("/Users/aproffit15/Desktop/config.csv"))
+			CSVreaderbuilder = (new CSVReaderBuilder<String[]>(new FileReader(userConfigFilePath))
 					.strategy(CSVStrategy.UK_DEFAULT).entryParser(new DefaultCSVEntryParser()));
 		} catch (FileNotFoundException e2) {
 			// TODO Auto-generated catch block
-			e2.printStackTrace();
+
+			try {
+
+				BufferedWriter writer = new BufferedWriter(new FileWriter(userConfigFilePath));
+				for (int x = 0; x < savedStocksSymbols.length; x++) {
+					if (x == savedStocksSymbols.length-1){
+						writer.write(savedStocksSymbols[x]);
+					} else {
+						writer.write(savedStocksSymbols[x].concat(","));
+
+					}
+				}
+				writer.flush();
+				CSVreaderbuilder = (new CSVReaderBuilder<String[]>(new FileReader(userConfigFilePath))
+						.strategy(CSVStrategy.UK_DEFAULT).entryParser(new DefaultCSVEntryParser()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		CSVReader<String[]> csvParser = CSVreaderbuilder.build();
 		try {
 			temp = csvParser.readAll();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+
 		}
 		savedStocksSymbols = temp.get(0);
 		System.out.println(temp.get(0)[1]);
-		
+
 		savedStocksBox = new Box(BoxLayout.X_AXIS);
 
 		savedStocksPanels = new StockPanel[savedStocksSymbols.length];
@@ -74,7 +96,7 @@ public class PriceQueryGui extends JFrame {
 
 		for(int i = 0; i < savedStocksSymbols.length; i++){
 			savedStocksPanels[i] = new StockPanel(savedStocksSymbols[i]);
-			
+
 			try {
 				writeResults((new PriceQueryer(savedStocksPanels[i].getSingletonSymbol(), 
 						miniFormats).getStockHash()), savedStocksPanels[i]);
@@ -82,7 +104,7 @@ public class PriceQueryGui extends JFrame {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			savedStocksBox.add(savedStocksPanels[i]);
 		}
 
@@ -167,7 +189,7 @@ public class PriceQueryGui extends JFrame {
 		input = sanitize(input);
 
 		symbols = input.split(",");
-		
+
 		try {
 			writeResults((new PriceQueryer(symbols, formats).getStockHash()), textOutput);
 		} catch (IOException e) {
