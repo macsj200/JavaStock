@@ -24,6 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import com.googlecode.jcsv.CSVStrategy;
 import com.googlecode.jcsv.reader.CSVReader;
@@ -40,8 +41,8 @@ public class PriceQueryGui extends JFrame {
 	private Box savedStocksBox = null;
 	private StockPanel[] savedStocksPanels = null;
 	private TextOutputArea textOutput = null;
-	private final String[] formats = { "n", "p", "c1" };
-	private final String[] miniFormats = { "p" };
+	private final String[] formats = { "n", "l1", "c1" };
+	private final String[] miniFormats = { "l1" };
 	private String[] savedStocksSymbols = { "aapl", "goog" };
 	private File configFile = null;
 	private FileReader configFileReader = null;
@@ -51,6 +52,7 @@ public class PriceQueryGui extends JFrame {
 	private CSVReaderBuilder<String[]> CSVreaderbuilder = null;
 	private List<String[]> temp = null;
 	private String userConfigFilePath = null;
+	private FixedUpdater fixedUpdater = null;
 
 	PriceQueryGui() {
 		setLayout(new BorderLayout());
@@ -132,23 +134,23 @@ public class PriceQueryGui extends JFrame {
 
 		savedStocksBox = new Box(BoxLayout.Y_AXIS);
 
-		savedStocksPanels = new StockPanel[savedStocksSymbols.length];
+		setSavedStocksPanels(new StockPanel[savedStocksSymbols.length]);
 
 		for (int i = 0; i < savedStocksSymbols.length; i++) {
-			savedStocksPanels[i] = new StockPanel(savedStocksSymbols[i]);
+			getSavedStocksPanels()[i] = new StockPanel(savedStocksSymbols[i]);
 
 			try {
 				writeResults(
 						new PriceQueryer(
-								savedStocksPanels[i].getSingletonSymbol(),
-								miniFormats).getStockHash(),
-						savedStocksPanels[i]);
+								getSavedStocksPanels()[i].getSingletonSymbol(),
+								getMiniFormats()).getStockHash(),
+						getSavedStocksPanels()[i]);
 			} catch (final IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			savedStocksBox.add(savedStocksPanels[i]);
+			savedStocksBox.add(getSavedStocksPanels()[i]);
 		}
 		
 		stocksScrollPane = new JScrollPane(savedStocksBox);
@@ -192,6 +194,10 @@ public class PriceQueryGui extends JFrame {
 		pack();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
+		
+		fixedUpdater = new FixedUpdater(this);
+		
+		(new Thread(fixedUpdater)).start();;
 
 		symbolInput.requestFocus();
 	}
@@ -259,5 +265,17 @@ public class PriceQueryGui extends JFrame {
 						+ ": " + secentry.getValue() + "\r\n");
 			}
 		}
+	}
+
+	public StockPanel[] getSavedStocksPanels() {
+		return savedStocksPanels;
+	}
+
+	public void setSavedStocksPanels(StockPanel[] savedStocksPanels) {
+		this.savedStocksPanels = savedStocksPanels;
+	}
+
+	public String[] getMiniFormats() {
+		return miniFormats;
 	}
 }
